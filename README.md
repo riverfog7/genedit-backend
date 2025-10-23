@@ -1,13 +1,18 @@
+## Models
+### Open vocabulary object detection
 openmmlab-community/mm_grounding_dino_large_all
 
+### Object segmentation
 facebook/sam2.1-hiera-large
 
-google/gemma-3n-E2B-it
+### SLM
+unsloth/gemma-3n-E2B-it
 
-Qwen/Qwen-Image
-
+### Image Inpainting (Adapter weights only)
 InstantX/Qwen-Image-ControlNet-Inpainting
 
+### Image Generation
+Qwen/Qwen-Image
 
 ## Container Environment Vars
 ### Required
