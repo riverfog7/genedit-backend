@@ -1,4 +1,4 @@
-FROM python:3.13-alpine3.22 as deps
+FROM python:3.13-alpine3.22 AS deps
 
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_NO_CACHE=1
