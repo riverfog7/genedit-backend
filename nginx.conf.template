@@ -34,11 +34,6 @@ http {
         location /health {
             return 200 'OK';
         }
-    }
-
-    server {
-        listen $PORT_HEALTH;
-        server_name _;
 
         location /ping {
             default_type text/plain;

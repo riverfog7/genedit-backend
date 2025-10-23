@@ -36,7 +36,7 @@ NGINX_CONF="/etc/nginx/nginx.conf"
 
 printf "Generating nginx config from template: %s -> %s\n" "$NGINX_TEMPLATE" "$NGINX_CONF"
 envsubst '\$PORT \$VLLM_PORT \$IMAGE_PORT' < "$NGINX_TEMPLATE" > "$NGINX_CONF"
-printf "Port configured to %s and Healthcheck port configured to %s" "$PORT" "$PORT_HEALTH"
+printf "Port configured to %s" "$PORT"
 
 printf "Starting Nginx in foreground...\n"
 nginx -g 'daemon off;'
