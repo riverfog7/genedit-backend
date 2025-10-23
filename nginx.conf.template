@@ -2,6 +2,9 @@ worker_processes 1;
 events { worker_connections 1024; }
 
 http {
+    access_log /dev/stdout;
+    error_log /dev/stderr warn;
+
     upstream vllm_upstream {
         server 0.0.0.0:$VLLM_PORT;
     }
