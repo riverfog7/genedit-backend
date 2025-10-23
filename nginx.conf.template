@@ -37,6 +37,12 @@ http {
         location /health {
             return 200 'OK';
         }
+    }
+
+    # Ping endpoint on health port
+    server {
+        listen $PORT_HEALTH;
+        server_name _;
 
         location /ping {
             default_type text/plain;
