@@ -25,7 +25,7 @@ ENV VLLM_MODEL_ALIAS="model"
 
 ENV GDINO_MODEL_ID="openmmlab-community/mm_grounding_dino_large_all"
 ENV SAM2_MODEL_ID="facebook/sam2.1-hiera-large"
-ENV LLM_MODEL_ID="RedHatAI/gemma-3n-E2B-it-quantized.w8a8"
+ENV LLM_MODEL_ID="RedHatAI/gemma-3n-E2B-it-FP8-dynamic"
 ENV DIFFUSION_CONTROLNET_MODEL_ID="InstantX/Qwen-Image-ControlNet-Inpainting"
 ENV DIFFUSION_MODEL_ID="Qwen/Qwen-Image"
 #ENV DIFFUSION_EDIT_MODEL_ID="ovedrive/qwen-image-edit-4bit"
