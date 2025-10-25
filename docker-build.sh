@@ -17,13 +17,18 @@ else
   docker buildx use cache-builder
 fi
 
+TAGS=("--tag" "${DOCKER_REPO}:${DOCKER_TAG}")
+if [ $DOCKER_TAG_LATEST -eq 1 ]; then
+  TAGS+=("--tag" "${DOCKER_REPO}:latest")
+fi
+
 docker buildx build \
-  --tag temp \
+  "${TAGS[@]}" \
   --platform linux/amd64 \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --cache-from type=registry,ref="${DOCKER_REPO}:buildcache" \
   --cache-to type=registry,ref="${DOCKER_REPO}:buildcache",mode=max \
-  --load \
+  --push \
   .
 
 if [ $? -ne 0 ]; then
@@ -31,20 +36,4 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-if [ $DOCKER_TAG_LATEST -eq 1 ]; then
-  docker tag temp "${DOCKER_REPO}:latest"
-  docker push "${DOCKER_REPO}:latest"
-  if [ $? -ne 0 ]; then
-    printf "Docker push latest failed. Exiting.\n" >&2
-    exit 1
-  fi
-fi
-
-docker tag temp "${DOCKER_REPO}:${DOCKER_TAG}"
-docker push "${DOCKER_REPO}:${DOCKER_TAG}"
-if [ $? -ne 0 ]; then
-  printf "Docker push %s failed. Exiting.\n" "${DOCKER_TAG}" >&2
-  exit 1
-fi
-docker rmi temp
 printf "Docker image %s:%s built and pushed successfully.\n" "${DOCKER_REPO}" "${DOCKER_TAG}"
