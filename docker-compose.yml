@@ -7,8 +7,8 @@ services:
     environment:
       PORT: "${PORT:-8000}"
       PORT_HEALTH: "${PORT_HEALTH:-8001}"
-      IMAGE_PORT: "${IMAGE_PORT:-25}"
-      VLLM_PORT: "${VLLM_PORT:-26}"
+      IMAGE_PORT: "${IMAGE_PORT:-8081}"
+      VLLM_API_PORT: "${VLLM_API_PORT:-8082}"
       DOWNLOAD_MODELS: "${DOWNLOAD_MODELS:-0}"
       PERSISTENT_VOLUME_DIR: "/workspace"
     ports:

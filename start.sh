@@ -44,7 +44,7 @@ NGINX_TEMPLATE="${SCRIPT_DIR}/nginx.conf.template"
 NGINX_CONF="/etc/nginx/nginx.conf"
 
 printf "Generating nginx config from template: %s -> %s\n" "$NGINX_TEMPLATE" "$NGINX_CONF"
-envsubst '\$PORT \$VLLM_PORT \$IMAGE_PORT \$PORT_HEALTH' < "$NGINX_TEMPLATE" > "$NGINX_CONF"
+envsubst '\$PORT \$VLLM_API_PORT \$IMAGE_PORT \$PORT_HEALTH' < "$NGINX_TEMPLATE" > "$NGINX_CONF"
 printf "Port configured to %s and port health to %s\n" "$PORT" "$PORT_HEALTH"
 
 printf "Starting Nginx in foreground...\n"
