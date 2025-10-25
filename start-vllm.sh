@@ -6,6 +6,7 @@ MODEL_PATH="${PERSISTENT_VOLUME_DIR}/models/"
 VLLM_MODEL_ALIAS="${VLLM_MODEL_ALIAS:-model}"
 HOST="0.0.0.0"
 PORT="${VLLM_API_PORT:-43}"
+VLLM_MEMORY_UTIL="${VLLM_MEMORY_UTIL:-0.38}"
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-8192}"
 export HF_HOME="${MODEL_PATH}"
 export VLLM_DISABLE_FLASHINFER=1
@@ -20,6 +21,6 @@ uv run vllm serve "${LLM_MODEL_ID}" \
     --dtype auto \
     --host "${HOST}" \
     --port "${PORT}" \
-    --gpu-memory-utilization 0.4 \
+    --gpu-memory-utilization $VLLM_MEMORY_UTIL \
     --trust-remote-code \
     --max-model-len "${MAX_MODEL_LEN}" &
