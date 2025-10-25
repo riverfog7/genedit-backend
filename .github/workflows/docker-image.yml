@@ -18,7 +18,6 @@ jobs:
 
     - name: Docker build and push
       run: |
-        cd backend
         ./docker-build.sh
       env:
         DOCKER_BUILDKIT: 1
