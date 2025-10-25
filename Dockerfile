@@ -22,7 +22,7 @@ ENV PERSISTENT_VOLUME_DIR=/workspace
 ENV DOWNLOAD_MODELS=0
 ENV MAX_MODEL_LEN=8192
 ENV VLLM_MODEL_ALIAS="model"
-ENV VLLM_MEMORY_UTIL=0.38
+ENV VLLM_MEMORY_UTIL=0.5
 
 ENV GDINO_MODEL_ID="openmmlab-community/mm_grounding_dino_large_all"
 ENV SAM2_MODEL_ID="facebook/sam2.1-hiera-large"
