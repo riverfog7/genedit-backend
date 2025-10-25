@@ -11,13 +11,6 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
-COPY uv.lock uv.lock
-COPY pyproject.toml pyproject.toml
-COPY .python-version .python-version
-
-RUN uv sync --locked --no-editable --no-dev --no-cache
-
 COPY . /app
 
 ENV PORT=8000

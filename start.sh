@@ -4,6 +4,10 @@ DOWNLOAD_MODELS=${DOWNLOAD_MODELS:-0}
 PORT=${PORT:-8888}
 PERSISTENT_VOLUME_DIR=${PERSISTENT_VOLUME_DIR:-/workspace}
 
+cd "${SCRIPT_DIR}" || exit 1
+printf "Installing dependencies via uv.\n"
+/bin/uv sync --locked --no-editable --no-dev --no-cache
+
 if [ ! -d "${PERSISTENT_VOLUME_DIR}" ]; then
   printf "Configured persistent volume directory ${PERSISTENT_VOLUME_DIR} does not exist. Exiting.\n" >&2
   exit 1
