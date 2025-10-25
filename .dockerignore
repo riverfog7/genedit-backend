@@ -330,3 +330,5 @@ Temporary Items
 
 .git/
 .gitignore
+
+docker-volume/

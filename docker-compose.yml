@@ -1,0 +1,27 @@
+services:
+  backend:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PORT: "${PORT:-8000}"
+      PORT_HEALTH: "${PORT_HEALTH:-8001}"
+      IMAGE_PORT: "${IMAGE_PORT:-25}"
+      VLLM_PORT: "${VLLM_PORT:-26}"
+      DOWNLOAD_MODELS: "${DOWNLOAD_MODELS:-0}"
+      PERSISTENT_VOLUME_DIR: "/workspace"
+    ports:
+      - "${PORT:-8000}:${PORT:-8000}"
+      - "${PORT_HEALTH:-8001}:${PORT_HEALTH:-8001}"
+    volumes:
+      - ./docker-volume:/workspace
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+          ignore:
+            - docker-volume/
+            - .venv/
+        - action: rebuild
+          path: nginx.conf.template
