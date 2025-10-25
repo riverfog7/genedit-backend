@@ -10,8 +10,6 @@ VLLM_MEMORY_UTIL="${VLLM_MEMORY_UTIL:-0.5}"
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-8192}"
 export HF_HOME="${MODEL_PATH}"
 export VLLM_DISABLE_FLASHINFER=1
-export VLLM_ATTENTION_BACKEND=XFORMERS
-export VLLM_USE_V1=0
 cd "${SCRIPT_DIR}"
 
 uv pip install --upgrade vllm --torch-backend=auto
