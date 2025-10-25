@@ -8,6 +8,8 @@ HOST="0.0.0.0"
 PORT="${VLLM_API_PORT:-43}"
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-8192}"
 export HF_HOME="${MODEL_PATH}"
+export VLLM_DISABLE_FLASHINFER=1
+export VLLM_ATTENTION_BACKEND=FLASH_ATTN
 cd "${SCRIPT_DIR}"
 
 uv pip install --upgrade vllm --torch-backend=auto
