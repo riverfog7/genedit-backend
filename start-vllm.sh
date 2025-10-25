@@ -5,7 +5,7 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 MODEL_PATH="${PERSISTENT_VOLUME_DIR}/models/"
 VLLM_MODEL_ALIAS="${VLLM_MODEL_ALIAS:-model}"
 HOST="0.0.0.0"
-PORT="${VLLM_PORT:-43}"
+PORT="${VLLM_API_PORT:-43}"
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-8192}"
 export HF_HOME="${MODEL_PATH}"
 cd "${SCRIPT_DIR}"
