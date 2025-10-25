@@ -10,6 +10,7 @@ MAX_MODEL_LEN="${MAX_MODEL_LEN:-8192}"
 export HF_HOME="${MODEL_PATH}"
 cd "${SCRIPT_DIR}"
 
+uv pip install --upgrade vllm --torch-backend=auto
 # Start vllm server
 printf "Starting vLLM server at %s:%s...\n" "${HOST}" "${PORT}"
 uv run vllm serve "${LLM_MODEL_ID}" \
