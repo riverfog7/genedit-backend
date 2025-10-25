@@ -22,4 +22,5 @@ uv run vllm serve "${LLM_MODEL_ID}" \
     --port "${PORT}" \
     --gpu-memory-utilization $VLLM_MEMORY_UTIL \
     --trust-remote-code \
-    --max-model-len "${MAX_MODEL_LEN}" &
+    --max-model-len "${MAX_MODEL_LEN}" \
+    --chat-template-content-format openai &
