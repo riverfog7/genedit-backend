@@ -19,6 +19,7 @@ ENV IMAGE_PORT=25
 ENV VLLM_PORT=26
 ENV PERSISTENT_VOLUME_DIR=/workspace
 ENV DOWNLOAD_MODELS=0
+ENV MAX_MODEL_LEN=8192
 
 ENV GDINO_MODEL_ID="openmmlab-community/mm_grounding_dino_large_all"
 ENV SAM2_MODEL_ID="facebook/sam2.1-hiera-large"
