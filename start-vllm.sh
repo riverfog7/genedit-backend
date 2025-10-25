@@ -18,7 +18,7 @@ uv pip install --upgrade vllm --torch-backend=auto
 printf "Starting vLLM server at %s:%s...\n" "${HOST}" "${PORT}"
 uv run vllm serve "${LLM_MODEL_ID}" \
     --served-model-name "${VLLM_MODEL_ALIAS}" \
-    --dtype auto \
+    --quantization fp8 \
     --host "${HOST}" \
     --port "${PORT}" \
     --gpu-memory-utilization $VLLM_MEMORY_UTIL \
