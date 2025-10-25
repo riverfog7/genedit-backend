@@ -7,7 +7,17 @@ DOCKER_REPO="riverfog7/genedit-backend"
 DOCKER_TAG=$(git rev-parse --short HEAD)
 DOCKER_TAG_LATEST=1
 
-docker build --tag temp --platform linux/amd64 .
+export DOCKER_BUILDKIT=1
+export BUILDKIT_PROGRESS=plain
+
+docker build \
+  --tag temp \
+  --platform linux/amd64 \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --cache-from type=registry,ref="${DOCKER_REPO}:buildcache" \
+  --cache-to type=registry,ref="${DOCKER_REPO}:buildcache",mode=max \
+  .
+
 if [ $? -ne 0 ]; then
   printf "Docker build failed. Exiting.\n" >&2
   exit 1

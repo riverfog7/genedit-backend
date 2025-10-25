@@ -9,19 +9,21 @@ COPY uv.lock uv.lock
 COPY pyproject.toml pyproject.toml
 COPY .python-version .python-version
 
-RUN uv sync --locked --no-editable --no-cache
+# Use BuildKit cache mount for faster rebuilds
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-editable --no-cache
 
 FROM python:3.13-slim
-RUN apt-get update && apt-get install -y \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y \
     nginx \
     gettext-base \
     bash \
     && rm -rf /var/lib/apt/lists/*
+
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 COPY --from=deps /app/.venv /app/.venv
-
-COPY . /app
-WORKDIR /app
 
 ENV PORT=8000
 ENV PORT_HEALTH=8001
@@ -36,6 +38,9 @@ ENV LLM_MODEL_ID="RedHatAI/gemma-3n-E2B-it-quantized.w8a8"
 ENV DIFFUSION_CONTROLNET_MODEL_ID="InstantX/Qwen-Image-ControlNet-Inpainting"
 ENV DIFFUSION_MODEL_ID="Qwen/Qwen-Image"
 #ENV DIFFUSION_EDIT_MODEL_ID="ovedrive/qwen-image-edit-4bit"
+
+COPY . /app
+WORKDIR /app
 
 EXPOSE $PORT
 EXPOSE $PORT_HEALTH
