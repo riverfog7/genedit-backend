@@ -10,12 +10,20 @@ DOCKER_TAG_LATEST=1
 export DOCKER_BUILDKIT=1
 export BUILDKIT_PROGRESS=plain
 
-docker build \
+if ! docker buildx inspect cache-builder >/dev/null 2>&1; then
+  echo "Creating buildx builder 'cache-builder'..."
+  docker buildx create --name cache-builder --driver docker-container --use
+else
+  docker buildx use cache-builder
+fi
+
+docker buildx build \
   --tag temp \
   --platform linux/amd64 \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --cache-from type=registry,ref="${DOCKER_REPO}:buildcache" \
   --cache-to type=registry,ref="${DOCKER_REPO}:buildcache",mode=max \
+  --load \
   .
 
 if [ $? -ne 0 ]; then
