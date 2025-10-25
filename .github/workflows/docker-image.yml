@@ -13,10 +13,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Docker build cache
-      uses: satackey/action-docker-layer-caching@v0.0.11
-      continue-on-error: true
-
     - name: Docker login
       run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
