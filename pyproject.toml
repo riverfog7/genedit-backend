@@ -8,6 +8,6 @@ dependencies = [
     "diffusers>=0.35.2",
     "fastapi>=0.119.0",
     "pydantic>=2.12.3",
-    "torch>=2.9.0",
+    "torch==2.8.0",
     "transformers>=4.57.1",
 ]

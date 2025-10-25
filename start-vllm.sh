@@ -6,7 +6,7 @@ MODEL_PATH="${PERSISTENT_VOLUME_DIR}/models/"
 export HF_HOME="${MODEL_PATH}"
 
 cd "${SCRIPT_DIR}"
-uv pip install vllm --torch-backend=auto
+uv pip install vllm==0.11.0 --torch-backend=auto
 
 # Start vllm server
 uv run vllm serve "${MODEL_ID}" \
