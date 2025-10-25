@@ -32,6 +32,7 @@ else
 fi
 
 # Start vllm server
+cd "${SCRIPT_DIR}"
 printf "Starting vllm server...\n"
 bash "${SCRIPT_DIR}/start-vllm.sh"
 
