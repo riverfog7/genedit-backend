@@ -31,6 +31,10 @@ else
   fi
 fi
 
+# Start vllm server
+printf "Starting vllm server...\n"
+bash "${SCRIPT_DIR}/start-vllm.sh"
+
 NGINX_TEMPLATE="${SCRIPT_DIR}/nginx.conf.template"
 NGINX_CONF="/etc/nginx/nginx.conf"
 
