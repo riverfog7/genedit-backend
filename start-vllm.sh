@@ -11,6 +11,7 @@ MAX_MODEL_LEN="${MAX_MODEL_LEN:-8192}"
 export HF_HOME="${MODEL_PATH}"
 export VLLM_DISABLE_FLASHINFER=1
 export VLLM_ATTENTION_BACKEND=XFORMERS
+export VLLM_USE_V1=0
 cd "${SCRIPT_DIR}"
 
 uv pip install --upgrade vllm --torch-backend=auto
@@ -21,5 +22,6 @@ uv run vllm serve "${LLM_MODEL_ID}" \
     --host "${HOST}" \
     --port "${PORT}" \
     --gpu-memory-utilization $VLLM_MEMORY_UTIL \
+    --enforce-eager \
     --trust-remote-code \
     --max-model-len "${MAX_MODEL_LEN}" &
