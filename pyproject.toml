@@ -8,6 +8,7 @@ dependencies = [
     "diffusers>=0.35.2",
     "fastapi>=0.119.0",
     "pydantic>=2.12.3",
+    "qwen-vl-utils>=0.0.14",
     "timm>=1.0.21",
     "torch==2.8.0",
     "transformers>=4.57.1",
@@ -15,6 +16,8 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "ipywidgets>=8.1.7",
+    "jupyter>=1.1.1",
     "langchain>=1.0.2",
     "langchain-openai>=1.0.1",
     "notebook>=7.4.7",
