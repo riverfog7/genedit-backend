@@ -2,6 +2,7 @@ import io
 import queue
 import threading
 from typing import List, Optional, Tuple
+import zipfile
 
 import torch
 from PIL import Image
@@ -19,7 +20,7 @@ class SegmenterInput(BaseModel):
 
 
 class SegmenterOutput(BaseModel):
-    masks: List[List[List[float]]]
+    masks: List[bytes]
     scores: List[float]
     shape: Tuple
 
@@ -32,8 +33,8 @@ class Sam2Segmenter:
     def __init__(self):
         self.model_id = config.sam2_model_id
         self.device = config.device
-        self.model = Sam2Model.from_pretrained(self.model_id).to(self.device)
-        self.processor = Sam2Processor.from_pretrained(self.model_id)
+        self.model = Sam2Model.from_pretrained(self.model_id, cache_dir=config.hf_home).to(self.device)
+        self.processor = Sam2Processor.from_pretrained(self.model_id, cache_dir=config.hf_home)
         self.model.eval()
 
         self._queue = queue.Queue()
@@ -45,7 +46,6 @@ class Sam2Segmenter:
     def _inference_worker(self):
         while not self._stop_event.is_set():
             try:
-                # Get request with timeout to check stop event periodically
                 input_data, result_queue = self._queue.get(timeout=0.1)
             except queue.Empty:
                 continue
@@ -71,7 +71,7 @@ class Sam2Segmenter:
         inputs = self.processor(**kwargs).to(self.device)
 
         with torch.no_grad():
-            outputs = self.model(**inputs, multimask_output=True)
+            outputs = self.model(**inputs, multimask_output=False)
 
         masks = self.processor.post_process_masks(
             outputs.pred_masks.cpu(),
@@ -82,8 +82,16 @@ class Sam2Segmenter:
         if isinstance(scores, float):
             scores = [scores]
 
+        mask_bytes = []
+        for mask in masks:
+            mask_array = mask.numpy().squeeze()
+            pil_mask = Image.fromarray((mask_array * 255).astype("uint8"))
+            buffer = io.BytesIO()
+            pil_mask.save(buffer, format="PNG")
+            mask_bytes.append(buffer.getvalue())
+
         return SegmenterOutput(
-            masks=masks.numpy().tolist(),
+            masks=mask_bytes,
             scores=scores,
             shape=tuple(masks.shape)
         )

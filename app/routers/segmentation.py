@@ -1,13 +1,18 @@
 from contextlib import asynccontextmanager
-from typing import Optional, Annotated
+from typing import Optional
+import json
+import zipfile
+import io
 
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, Response
 from fastapi import HTTPException, Form
+from pydantic import ValidationError
 
-from ..internal.segmentation import Sam2Segmenter, SegmenterInput, SegmenterOutput
+from ..internal.segmentation import Sam2Segmenter, SegmenterInput
 from ..models.segmentation import PointSegmentRequest, BoxSegmentRequest, CombinedSegmentRequest
 
 segmenter: Optional[Sam2Segmenter] = None
+
 
 @asynccontextmanager
 async def lifespan(fastapi_router: APIRouter):
@@ -17,24 +22,38 @@ async def lifespan(fastapi_router: APIRouter):
     segmenter.stop()
     segmenter = None
 
+
 router = APIRouter(prefix="", tags=["segmentation"], lifespan=lifespan)
 
-@router.post("/point", response_model=SegmenterOutput)
+
+def create_mask_zip(masks: list, scores: list, shape: tuple) -> bytes:
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zf:
+        for i, mask_bytes in enumerate(masks):
+            zf.writestr(f'{i}.png', mask_bytes)
+
+        metadata = {
+            "scores": scores,
+            "shape": list(shape)
+        }
+        zf.writestr('metadata.json', json.dumps(metadata))
+
+    buf.seek(0)
+    return buf.getvalue()
+
+
+@router.post("/point")
 def segment_with_points(
         image: UploadFile = File(..., description="Image file to segment"),
-        request: Annotated[PointSegmentRequest, Form()] = None,
+        data: str = Form(..., description="JSON string with points and labels"),
 ):
-    """
-    Segment objects using point clicks.
-
-    Provide an image and a list of point coordinates with labels.
-    - Label 1 = positive click (include this in mask)
-    - Label 0 = negative click (exclude this from mask)
-    """
     if not segmenter:
         raise HTTPException(status_code=503, detail="Segmenter not initialized")
 
     try:
+        data_dict = json.loads(data)
+        request = PointSegmentRequest(**data_dict)
+
         image_bytes = image.file.read()
 
         input_data = SegmenterInput(
@@ -44,26 +63,37 @@ def segment_with_points(
         )
 
         result = segmenter.segment(input_data)
-        return result
 
+        zip_bytes = create_mask_zip(result.masks, result.scores, result.shape)
+
+        return Response(
+            content=zip_bytes,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": "attachment; filename=masks.zip"
+            }
+        )
+
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid JSON in 'data' field: {str(e)}")
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=f"Validation error: {e.errors()}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Segmentation failed: {str(e)}")
 
 
-@router.post("/box", response_model=SegmenterOutput)
+@router.post("/box")
 def segment_with_box(
         image: UploadFile = File(..., description="Image file to segment"),
-        request: Annotated[BoxSegmentRequest, Form()] = None,
+        data: str = Form(..., description="JSON string with box coordinates"),
 ):
-    """
-    Segment objects using a bounding box.
-
-    Provide an image and bounding box coordinates [x_min, y_min, x_max, y_max].
-    """
     if not segmenter:
         raise HTTPException(status_code=503, detail="Segmenter not initialized")
 
     try:
+        data_dict = json.loads(data)
+        request = BoxSegmentRequest(**data_dict)
+
         image_bytes = image.file.read()
 
         input_data = SegmenterInput(
@@ -72,37 +102,46 @@ def segment_with_box(
         )
 
         result = segmenter.segment(input_data)
-        return result
 
+        zip_bytes = create_mask_zip(result.masks, result.scores, result.shape)
+
+        return Response(
+            content=zip_bytes,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": "attachment; filename=masks.zip"
+            }
+        )
+
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid JSON in 'data' field: {str(e)}")
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=f"Validation error: {e.errors()}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Segmentation failed: {str(e)}")
 
-@router.post("/combined", response_model=SegmenterOutput)
+
+@router.post("/combined")
 def segment_combined(
         image: UploadFile = File(..., description="Image file to segment"),
-        request: Annotated[CombinedSegmentRequest, Form()] = None,
+        data: str = Form(..., description="JSON string with points, labels, and/or box"),
 ):
-    """
-    Segment with combination of prompts (points and/or box).
-
-    You can provide:
-    - Just points + labels
-    - Just box
-    - Both points and box for refinement
-    """
     if not segmenter:
         raise HTTPException(status_code=503, detail="Segmenter not initialized")
 
-    if not request.points and not request.box:
-        raise HTTPException(
-            status_code=400,
-            detail="Must provide either points+labels or box"
-        )
-
-    if request.points and not request.labels:
-        raise HTTPException(status_code=400, detail="Points require labels")
-
     try:
+        data_dict = json.loads(data)
+        request = CombinedSegmentRequest(**data_dict)
+
+        if not request.points and not request.box:
+            raise HTTPException(
+                status_code=400,
+                detail="Must provide either points+labels or box"
+            )
+
+        if request.points and not request.labels:
+            raise HTTPException(status_code=400, detail="Points require labels")
+
         image_bytes = image.file.read()
 
         input_data = SegmenterInput(
@@ -113,15 +152,27 @@ def segment_combined(
         )
 
         result = segmenter.segment(input_data)
-        return result
 
+        zip_bytes = create_mask_zip(result.masks, result.scores, result.shape)
+
+        return Response(
+            content=zip_bytes,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": "attachment; filename=masks.zip"
+            }
+        )
+
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid JSON in 'data' field: {str(e)}")
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=f"Validation error: {e.errors()}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Segmentation failed: {str(e)}")
 
 
 @router.get("/health")
 def health_check():
-    """Check if the segmenter is ready."""
     return {
         "status": "healthy" if segmenter else "not initialized",
         "device": segmenter.device if segmenter else None,
