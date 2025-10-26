@@ -1,31 +1,14 @@
 import io
 import queue
 import threading
-from typing import List, Optional, Tuple
 
 import torch
 from PIL import Image
-from pydantic import BaseModel
 from transformers import Sam2Model, Sam2Processor
 
 from ..configs import config
-
-
-class SegmenterInput(BaseModel):
-    image: bytes
-    points: Optional[List[List[int]]] = None
-    labels: Optional[List[int]] = None
-    boxes: Optional[List[int]] = None
-
-
-class SegmenterOutput(BaseModel):
-    masks: List[bytes]
-    scores: List[float]
-    shape: Tuple
-
-
-def load_image(image_bytes: bytes):
-    return Image.open(io.BytesIO(image_bytes)).convert("RGB")
+from ..models.segmentation import SegmenterInput, SegmenterOutput
+from ..utils.common import load_image
 
 
 class Sam2Segmenter:

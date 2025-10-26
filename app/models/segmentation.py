@@ -1,6 +1,20 @@
 from typing import List, Optional
+from typing import Tuple
 
 from pydantic import BaseModel, Field
+
+
+class SegmenterInput(BaseModel):
+    image: bytes
+    points: Optional[List[List[int]]] = None
+    labels: Optional[List[int]] = None
+    boxes: Optional[List[int]] = None
+
+
+class SegmenterOutput(BaseModel):
+    masks: List[bytes]
+    scores: List[float]
+    shape: Tuple
 
 
 class PointSegmentRequest(BaseModel):
