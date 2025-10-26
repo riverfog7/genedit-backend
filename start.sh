@@ -35,15 +35,15 @@ else
   fi
 fi
 
-# Start fastapi server
-cd "${SCRIPT_DIR}"
-printf "Starting fastapi server...\n"
-bash "${SCRIPT_DIR}/start-fastapi.sh"
-
 # Start vllm server
 cd "${SCRIPT_DIR}"
 printf "Starting vllm server...\n"
 bash "${SCRIPT_DIR}/start-vllm.sh"
+
+# Start fastapi server
+cd "${SCRIPT_DIR}"
+printf "Starting fastapi server...\n"
+bash "${SCRIPT_DIR}/start-fastapi.sh"
 
 NGINX_TEMPLATE="${SCRIPT_DIR}/nginx.conf.template"
 NGINX_CONF="/etc/nginx/nginx.conf"
