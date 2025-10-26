@@ -2,7 +2,6 @@ import io
 import queue
 import threading
 from typing import List, Optional, Tuple
-import zipfile
 
 import torch
 from PIL import Image

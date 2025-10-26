@@ -1,8 +1,8 @@
-from contextlib import asynccontextmanager
-from typing import Optional
+import io
 import json
 import zipfile
-import io
+from contextlib import asynccontextmanager
+from typing import Optional
 
 from fastapi import APIRouter, UploadFile, File, Response
 from fastapi import HTTPException, Form
