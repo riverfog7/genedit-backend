@@ -40,8 +40,7 @@ def detect_objects(
         input_data = DetectorInput(
             image=image_bytes,
             text=request.text,
-            box_threshold=request.box_threshold,
-            text_threshold=request.text_threshold
+            threshold=request.threshold,
         )
 
         result = detector.detect(input_data)

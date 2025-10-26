@@ -6,7 +6,8 @@ from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
 
 from ..configs import config
 from ..models.object_detection import DetectorInput, DetectionResult, DetectorOutput
-from ..utils.common import load_image
+from ..utils.common import load_image as load_pil_image
+from transformers.image_utils import load_image
 
 
 class GDinoDetector:
@@ -42,23 +43,19 @@ class GDinoDetector:
                 self._queue.task_done()
 
     def _process(self, input_data: DetectorInput) -> DetectorOutput:
-        image = load_image(input_data.image)
+        image = load_image(load_pil_image(input_data.image))
 
-        text = input_data.text.lower()
-        if not text.endswith('.'):
-            text += '.'
+        text_labels = [input_data.text]
 
-        inputs = self.processor(images=image, text=text, return_tensors="pt").to(self.device)
+        inputs = self.processor(images=image, text=text_labels, return_tensors="pt").to(self.device)
 
         with torch.no_grad():
             outputs = self.model(**inputs)
 
         results = self.processor.post_process_grounded_object_detection(
             outputs,
-            inputs.input_ids,
-            box_threshold=input_data.box_threshold,
-            text_threshold=input_data.text_threshold,
-            target_sizes=[image.size[::-1]]
+            threshold=input_data.threshold,
+            target_sizes=[(image.height, image.width)]
         )
 
         detections = []

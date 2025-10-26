@@ -5,9 +5,8 @@ from pydantic import BaseModel, Field
 
 class DetectorInput(BaseModel):
     image: bytes
-    text: str
-    box_threshold: float = 0.4
-    text_threshold: float = 0.3
+    text: List[str]
+    threshold: float = 0.2
 
 
 class DetectionResult(BaseModel):
@@ -21,6 +20,5 @@ class DetectorOutput(BaseModel):
 
 
 class DetectRequest(BaseModel):
-    text: str = Field(..., description="Text prompts separated by dots (e.g., 'a cat. a dog.')")
-    box_threshold: float = Field(0.4, description="Box confidence threshold", ge=0.0, le=1.0)
-    text_threshold: float = Field(0.3, description="Text confidence threshold", ge=0.0, le=1.0)
+    text: List[str] = Field(..., description="List of text prompts (e.g., ['a cat', 'a dog'])")
+    threshold: float = Field(0.2, description="Detection confidence threshold", ge=0.0, le=1.0)
