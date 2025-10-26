@@ -35,6 +35,11 @@ else
   fi
 fi
 
+# Start fastapi server
+cd "${SCRIPT_DIR}"
+printf "Starting fastapi server...\n"
+bash "${SCRIPT_DIR}/start-fastapi.sh"
+
 # Start vllm server
 cd "${SCRIPT_DIR}"
 printf "Starting vllm server...\n"
