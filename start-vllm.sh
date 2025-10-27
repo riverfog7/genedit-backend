@@ -29,7 +29,7 @@ CUDA_VISIBLE_DEVICES=$VLLM_DEVICE uv run vllm serve "${LLM_MODEL_ID}" \
     --limit-mm-per-prompt.video 0 \
     --max-model-len "${MAX_MODEL_LEN}" &
 
-until $(curl --output /dev/null --silent --head --fail http://localhost:${PORT}/v1/models); do
-    printf 'Waiting for vLLM server to be up at %s:%s...\n' "${HOST}" "${PORT}"
+printf 'Waiting for vLLM server to be up at %s:%s...\n' "${HOST}" "${PORT}"
+until $(curl --output /dev/null --silent --fail http://localhost:${PORT}/v1/models); do
     sleep 1
 done
