@@ -23,5 +23,9 @@ CUDA_VISIBLE_DEVICES=$VLLM_DEVICE uv run vllm serve "${LLM_MODEL_ID}" \
     --gpu-memory-utilization $VLLM_MEMORY_UTIL \
     --compilation-config "{\"level\": 3, \"cudagraph_capture_sizes\": [1, 2], \"max_capture_size\": ${MAX_MODEL_LEN}}" \
     --trust-remote-code \
+    --reasoning-parser qwen3 \
+    --enable-reasoning \
+    --tool-call-parser hermes \
+    --enable-auto-tool-choice \
     --limit-mm-per-prompt.video 0 \
     --max-model-len "${MAX_MODEL_LEN}" &
