@@ -24,8 +24,12 @@ CUDA_VISIBLE_DEVICES=$VLLM_DEVICE uv run vllm serve "${LLM_MODEL_ID}" \
     --compilation-config "{\"level\": 3, \"cudagraph_capture_sizes\": [1, 2], \"max_capture_size\": ${MAX_MODEL_LEN}}" \
     --trust-remote-code \
     --reasoning-parser qwen3 \
-    --enable-reasoning \
     --tool-call-parser hermes \
     --enable-auto-tool-choice \
     --limit-mm-per-prompt.video 0 \
     --max-model-len "${MAX_MODEL_LEN}" &
+
+until $(curl --output /dev/null --silent --head --fail http://localhost:${PORT}/v1/models); do
+    printf 'Waiting for vLLM server to be up at %s:%s...\n' "${HOST}" "${PORT}"
+    sleep 1
+done
