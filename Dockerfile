@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     gettext-base \
     bash \
     build-essential \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
