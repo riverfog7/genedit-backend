@@ -6,7 +6,7 @@ openmmlab-community/mm_grounding_dino_large_all
 facebook/sam2.1-hiera-large
 
 ### SLM
-unsloth/gemma-3n-E2B-it
+Qwen/Qwen3-VL-32B-Thinking-FP8
 
 ### Image Inpainting (Adapter weights only)
 InstantX/Qwen-Image-ControlNet-Inpainting
