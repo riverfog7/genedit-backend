@@ -7,7 +7,7 @@ import requests
 from PIL import Image
 
 from .models import GenerateRequest, InpaintRequest
-from .utils import process_image
+from .utils import process_image, print_and_raise_for_status
 
 
 class ImageGenerationClient:
@@ -37,7 +37,7 @@ class ImageGenerationClient:
 
         data = {"data": request.model_dump_json()}
         response = self.session.post(os.path.join(self.base_url, 'generate'), data=data)
-        response.raise_for_status()
+        print_and_raise_for_status(response)
 
         return Image.open(io.BytesIO(response.content))
 
@@ -68,11 +68,11 @@ class ImageGenerationClient:
         data = {"data": request.model_dump_json()}
 
         response = self.session.post(os.path.join(self.base_url, 'inpaint'), files=files, data=data)
-        response.raise_for_status()
+        print_and_raise_for_status(response)
 
         return Image.open(io.BytesIO(response.content))
 
     def health_check(self) -> dict:
         response = self.session.get(f"{self.base_url}/health")
-        response.raise_for_status()
+        print_and_raise_for_status(response)
         return response.json()

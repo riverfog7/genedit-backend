@@ -67,3 +67,12 @@ def draw_detections(
             draw.text((x1 + 4, y1 - text_height - 2), text, fill=text_color, font=font)
 
     return image
+
+
+def print_and_raise_for_status(response):
+    try:
+        response.raise_for_status()
+    except Exception as e:
+        print(f"Request failed: {e}")
+        print(f"Response content: {response.content.decode('utf-8')}")
+        raise e

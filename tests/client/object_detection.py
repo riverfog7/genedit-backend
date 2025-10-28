@@ -6,7 +6,7 @@ import requests
 from PIL import Image
 
 from .models import DetectRequest, DetectorOutput
-from .utils import process_image
+from .utils import process_image, print_and_raise_for_status
 
 
 class DetectionClient:
@@ -24,10 +24,10 @@ class DetectionClient:
         files = {"image": process_image(image)}
         data = {"data": request.model_dump_json()}
         response = self.session.post(self.base_url, files=files, data=data)
-        response.raise_for_status()
+        print_and_raise_for_status(response)
         return DetectorOutput(**response.json())
 
     def health_check(self) -> dict:
         response = self.session.get(os.path.join(self.base_url, 'health'))
-        response.raise_for_status()
+        print_and_raise_for_status(response)
         return response.json()

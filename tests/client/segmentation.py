@@ -6,7 +6,7 @@ import requests
 from PIL import Image
 
 from .models import SegmentationResult, PointSegmentRequest, BoxSegmentRequest, CombinedSegmentRequest
-from .utils import process_image
+from .utils import process_image, print_and_raise_for_status
 
 
 class SegmentationClient:
@@ -24,7 +24,7 @@ class SegmentationClient:
         files = {"image": process_image(image)}
         data = {"data": request.model_dump_json()}
         response = self.session.post(os.path.join(self.base_url, "point"), files=files, data=data)
-        response.raise_for_status()
+        print_and_raise_for_status(response)
         return SegmentationResult(response.content)
 
     def segment_box(
@@ -36,7 +36,7 @@ class SegmentationClient:
         files = {"image": process_image(image)}
         data = {"data": request.model_dump_json()}
         response = self.session.post(os.path.join(self.base_url, "box"), files=files, data=data)
-        response.raise_for_status()
+        print_and_raise_for_status(response)
         return SegmentationResult(response.content)
 
     def segment_combined(
@@ -50,10 +50,10 @@ class SegmentationClient:
         files = {"image": process_image(image)}
         data = {"data": request.model_dump_json()}
         response = self.session.post(os.path.join(self.base_url, "combined"), files=files, data=data)
-        response.raise_for_status()
+        print_and_raise_for_status(response)
         return SegmentationResult(response.content)
 
     def health_check(self) -> dict:
         response = self.session.get(os.path.join(self.base_url, "health"))
-        response.raise_for_status()
+        print_and_raise_for_status(response)
         return response.json()
