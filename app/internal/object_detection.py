@@ -67,6 +67,9 @@ class GDinoDetector:
             )
             detections.append(detection)
 
+        if config.cuda_frequent_empty_cache:
+            torch.cuda.empty_cache()
+
         return DetectorOutput(detections=detections)
 
     def detect(self, input_data: DetectorInput) -> DetectorOutput:

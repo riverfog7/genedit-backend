@@ -89,6 +89,9 @@ class QwenImageGenerator:
             generator=generator
         ).images[0]
 
+        if config.cuda_frequent_empty_cache:
+            torch.cuda.empty_cache()
+
         return GeneratorOutput(image=image_to_bytes(image))
 
     def _process_inpaint(self, input_data: InpaintInput) -> GeneratorOutput:
@@ -111,6 +114,9 @@ class QwenImageGenerator:
             true_cfg_scale=input_data.true_cfg_scale,
             generator=generator
         ).images[0]
+
+        if config.cuda_frequent_empty_cache:
+            torch.cuda.empty_cache()
 
         return GeneratorOutput(image=image_to_bytes(image))
 

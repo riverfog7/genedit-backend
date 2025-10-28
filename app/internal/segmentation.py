@@ -72,6 +72,9 @@ class Sam2Segmenter:
             pil_mask.save(buffer, format="PNG")
             mask_bytes.append(buffer.getvalue())
 
+        if config.cuda_frequent_empty_cache:
+            torch.cuda.empty_cache()
+
         return SegmenterOutput(
             masks=mask_bytes,
             scores=scores,

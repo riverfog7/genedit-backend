@@ -13,5 +13,6 @@ class Config(BaseModel):
     diffusion_model_id: str = os.getenv("DIFFUSION_MODEL_ID")
     diffusion_controlnet_model_id: str = os.getenv("DIFFUSION_CONTROLNET_MODEL_ID")
     diffusion_orig_model_id: str = os.getenv("DIFFUSION_ORIG_MODEL_ID")
+    cuda_frequent_empty_cache: bool = os.getenv("CUDA_FREQUENT_EMPTY_CACHE") == "1"
 
 config = Config()
