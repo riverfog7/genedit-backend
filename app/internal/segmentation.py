@@ -1,3 +1,4 @@
+import gc
 import io
 import queue
 import threading
@@ -73,6 +74,7 @@ class Sam2Segmenter:
             mask_bytes.append(buffer.getvalue())
 
         if config.cuda_frequent_empty_cache:
+            gc.collect()
             torch.cuda.empty_cache()
 
         return SegmenterOutput(

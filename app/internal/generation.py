@@ -1,3 +1,4 @@
+import gc
 import queue
 import threading
 
@@ -90,6 +91,7 @@ class QwenImageGenerator:
         ).images[0]
 
         if config.cuda_frequent_empty_cache:
+            gc.collect()
             torch.cuda.empty_cache()
 
         return GeneratorOutput(image=image_to_bytes(image))
@@ -116,6 +118,7 @@ class QwenImageGenerator:
         ).images[0]
 
         if config.cuda_frequent_empty_cache:
+            gc.collect()
             torch.cuda.empty_cache()
 
         return GeneratorOutput(image=image_to_bytes(image))

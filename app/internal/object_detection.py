@@ -1,13 +1,14 @@
+import gc
 import queue
 import threading
 
 import torch
 from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
+from transformers.image_utils import load_image
 
 from ..configs import config
 from ..models.object_detection import DetectorInput, DetectionResult, DetectorOutput
 from ..utils.common import load_image as load_pil_image
-from transformers.image_utils import load_image
 
 
 class GDinoDetector:
@@ -68,6 +69,7 @@ class GDinoDetector:
             detections.append(detection)
 
         if config.cuda_frequent_empty_cache:
+            gc.collect()
             torch.cuda.empty_cache()
 
         return DetectorOutput(detections=detections)
