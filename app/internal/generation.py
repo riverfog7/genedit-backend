@@ -32,7 +32,7 @@ class QwenImageGenerator:
             transformer=transformer,
             torch_dtype=self.torch_dtype,
             cache_dir=config.hf_home
-        )
+        ).to(self.device)
         self.txt2img_pipe.enable_vae_tiling()
 
         controlnet = QwenImageControlNetModel.from_pretrained(
@@ -47,8 +47,8 @@ class QwenImageGenerator:
             controlnet=controlnet,
             torch_dtype=self.torch_dtype,
             cache_dir=config.hf_home
-        )
-        self.inpaint_pipe.enable_vae_tiling()
+        ).to(self.device)
+        self.inpaint_pipe.vae.enable_tiling()
 
         self._queue = queue.Queue()
         self._stop_event = threading.Event()
