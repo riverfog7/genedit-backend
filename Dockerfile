@@ -30,6 +30,9 @@ ENV VLLM_MEMORY_UTIL=0.98
 ENV VLLM_DEVICE=0
 ENV IMAGE_DEVICE=1
 
+ENV DEBUG_DISABLE_VLLM=0
+ENV DEBUG_DISABLE_IMAGE=0
+
 ENV GDINO_MODEL_ID="openmmlab-community/mm_grounding_dino_large_all"
 ENV SAM2_MODEL_ID="facebook/sam2.1-hiera-large"
 ENV LLM_MODEL_ID="Qwen/Qwen3-VL-32B-Thinking-FP8"

@@ -6,6 +6,7 @@ MODEL_PATH="${PERSISTENT_VOLUME_DIR}/models/"
 VLLM_MODEL_ALIAS="${VLLM_MODEL_ALIAS:-model}"
 HOST="0.0.0.0"
 PORT="${VLLM_API_PORT:-43}"
+DEBUG_DISABLE_VLLM=${DEBUG_DISABLE_VLLM:-0}
 VLLM_MEMORY_UTIL="${VLLM_MEMORY_UTIL:-0.98}"
 VLLM_DEVICE=${VLLM_DEVICE:-0}
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-16384}"
@@ -14,6 +15,12 @@ export VLLM_DISABLE_FLASHINFER=1
 cd "${SCRIPT_DIR}"
 
 uv pip install --upgrade vllm --torch-backend=auto
+
+if [ ${DEBUG_DISABLE_VLLM} -eq 1 ]; then
+    printf "vLLM server start is disabled via DEBUG_DISABLE_VLLM=1. Exiting.\n"
+    exit 0
+fi
+
 # Start vllm server
 printf "Starting vLLM server at %s:%s...\n" "${HOST}" "${PORT}"
 CUDA_VISIBLE_DEVICES=$VLLM_DEVICE uv run vllm serve "${LLM_MODEL_ID}" \

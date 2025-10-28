@@ -4,6 +4,9 @@ DOWNLOAD_MODELS=${DOWNLOAD_MODELS:-0}
 PORT=${PORT:-8888}
 PERSISTENT_VOLUME_DIR=${PERSISTENT_VOLUME_DIR:-/workspace}
 
+DEBUG_DISABLE_VLLM=${DEBUG_DISABLE_VLLM:-0}
+DEBUG_DISABLE_IMAGE=${DEBUG_DISABLE_IMAGE:-0}
+
 cd "${SCRIPT_DIR}" || exit 1
 printf "Installing dependencies via uv.\n"
 /bin/uv sync --locked --no-editable --no-dev --no-cache
