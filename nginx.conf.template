@@ -15,6 +15,7 @@ http {
     server {
         listen $PORT;
         server_name _;
+        client_max_body_size 50M;
 
         location /vllm/ {
             proxy_pass http://vllm_upstream/;
