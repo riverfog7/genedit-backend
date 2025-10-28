@@ -21,34 +21,32 @@ class QwenImageGenerator:
         self.torch_dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
 
         transformer = AutoModel.from_pretrained(
-            "dimitribarbot/Qwen-Image-int8wo",
+            config.diffusion_model_id,
             torch_dtype=self.torch_dtype,
             cache_dir=config.hf_home,
             use_safetensors=False
         )
 
         self.txt2img_pipe = DiffusionPipeline.from_pretrained(
-            config.qwen_model_id,
+            config.diffusion_orig_model_id,
             transformer=transformer,
             torch_dtype=self.torch_dtype,
             cache_dir=config.hf_home
         )
-        self.txt2img_pipe.enable_model_cpu_offload()
         self.txt2img_pipe.enable_vae_tiling()
 
         controlnet = QwenImageControlNetModel.from_pretrained(
-            config.qwen_controlnet_id,
+            config.diffusion_controlnet_model_id,
             torch_dtype=self.torch_dtype,
             cache_dir=config.hf_home
         )
 
         self.inpaint_pipe = QwenImageControlNetInpaintPipeline.from_pretrained(
-            config.qwen_model_id,
+            config.diffusion_orig_model_id,
             controlnet=controlnet,
             torch_dtype=self.torch_dtype,
             cache_dir=config.hf_home
         )
-        self.inpaint_pipe.enable_model_cpu_offload()
         self.inpaint_pipe.enable_vae_tiling()
 
         self._queue = queue.Queue()

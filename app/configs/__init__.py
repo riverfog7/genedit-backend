@@ -12,5 +12,6 @@ class Config(BaseModel):
     gdino_model_id: str = os.getenv("GDINO_MODEL_ID")
     diffusion_model_id: str = os.getenv("DIFFUSION_MODEL_ID")
     diffusion_controlnet_model_id: str = os.getenv("DIFFUSION_CONTROLNET_MODEL_ID")
+    diffusion_orig_model_id: str = os.getenv("DIFFUSION_ORIG_MODEL_ID")
 
 config = Config()

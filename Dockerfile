@@ -33,7 +33,9 @@ ENV GDINO_MODEL_ID="openmmlab-community/mm_grounding_dino_large_all"
 ENV SAM2_MODEL_ID="facebook/sam2.1-hiera-large"
 ENV LLM_MODEL_ID="Qwen/Qwen3-VL-32B-Thinking-FP8"
 ENV DIFFUSION_CONTROLNET_MODEL_ID="InstantX/Qwen-Image-ControlNet-Inpainting"
-ENV DIFFUSION_MODEL_ID="Qwen/Qwen-Image"
+ENV DIFFUSION_MODEL_ID="dimitribarbot/Qwen-Image-int8wo"
+# Do not download this model. Only used for config files. Will be downloaded at API server startup.
+ENV DIFFUSION_ORIG_MODEL_ID="Qwen/Qwen-Image"
 #ENV DIFFUSION_EDIT_MODEL_ID="ovedrive/qwen-image-edit-4bit"
 
 EXPOSE $PORT
