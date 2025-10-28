@@ -199,7 +199,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "diffusers", specifier = ">=0.35.2" },
+    { name = "diffusers", git = "https://github.com/huggingface/diffusers" },
     { name = "fastapi", specifier = ">=0.119.0" },
     { name = "pydantic", specifier = ">=2.12.3" },
     { name = "qwen-vl-utils", specifier = ">=0.0.14" },
@@ -397,10 +397,11 @@ wheels = [
 
 [[package]]
 name = "diffusers"
-version = "0.35.2"
-source = { registry = "https://pypi.org/simple" }
+version = "0.36.0.dev0"
+source = { git = "https://github.com/huggingface/diffusers#6d1a6486024192951ce696e8f4cf79a39509182f" }
 dependencies = [
     { name = "filelock" },
+    { name = "httpx" },
     { name = "huggingface-hub" },
     { name = "importlib-metadata" },
     { name = "numpy" },
@@ -408,10 +409,6 @@ dependencies = [
     { name = "regex" },
     { name = "requests" },
     { name = "safetensors" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/03/68/288ca23c7c05c73e87ffe5efffc282400ac9b017f7a9bb03883f4310ea15/diffusers-0.35.2.tar.gz", hash = "sha256:30ecd552303edfcfe1724573c3918a8462ee3ab4d529bdbd4c0045f763affded", size = 3366711 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/2e/38d9824f8c6bb048c5ba21c6d4da54c29c162a46b58b3ef907a360a76d3e/diffusers-0.35.2-py3-none-any.whl", hash = "sha256:d50d5e74fdd6dcf55e5c1d304bc52cc7c2659abd1752740d736d7b54078b4db5", size = 4121649 },
 ]
 
 [[package]]

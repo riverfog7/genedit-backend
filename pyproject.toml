@@ -22,3 +22,6 @@ dev = [
     "langchain-openai>=1.0.1",
     "notebook>=7.4.7",
 ]
+
+[tool.uv.sources]
+diffusers = { git = "https://github.com/huggingface/diffusers" }

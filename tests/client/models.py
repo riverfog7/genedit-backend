@@ -57,3 +57,22 @@ class SegmentationResult:
             with zipfile.ZipFile(io.BytesIO(self.zip_bytes)) as zf:
                 self._metadata = json.loads(zf.read('metadata.json'))
         return self._metadata
+
+
+class GenerateRequest(BaseModel):
+    prompt: str
+    negative_prompt: str = ""
+    width: int = 1664
+    height: int = 928
+    num_inference_steps: int = 50
+    true_cfg_scale: float = 4.0
+    seed: Optional[int] = None
+
+
+class InpaintRequest(BaseModel):
+    prompt: str
+    negative_prompt: str = ""
+    num_inference_steps: int = 30
+    true_cfg_scale: float = 4.0
+    controlnet_conditioning_scale: float = 1.0
+    seed: Optional[int] = None
