@@ -39,16 +39,16 @@ class QwenImageGenerator:
             config.diffusion_controlnet_model_id,
             torch_dtype=self.torch_dtype,
             cache_dir=config.hf_home
-        )
-
-        self.inpaint_pipe = QwenImageControlNetInpaintPipeline.from_pretrained(
-            config.diffusion_orig_model_id,
-            transformer=transformer,
-            controlnet=controlnet,
-            torch_dtype=self.torch_dtype,
-            cache_dir=config.hf_home
         ).to(self.device)
-        self.inpaint_pipe.vae.enable_tiling()
+
+        self.inpaint_pipe = QwenImageControlNetInpaintPipeline(
+            vae=self.txt2img_pipe.vae,
+            text_encoder=self.txt2img_pipe.text_encoder,
+            tokenizer=self.txt2img_pipe.tokenizer,
+            transformer=self.txt2img_pipe.transformer,
+            controlnet=controlnet,
+            scheduler=self.txt2img_pipe.scheduler,
+        ).to(self.device)
 
         self._queue = queue.Queue()
         self._stop_event = threading.Event()
