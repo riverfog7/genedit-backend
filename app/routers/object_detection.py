@@ -59,5 +59,6 @@ def health_check():
     return {
         "status": "healthy" if detector else "not initialized",
         "device": detector.device if detector else None,
-        "model": detector.model_id if detector else None
+        "model": detector.model_id if detector else None,
+        "memory_footprint": detector.get_memory_footprint() if detector else None,
     }

@@ -98,3 +98,6 @@ class Sam2Segmenter:
         self._worker_thread.join()
         del self.model, self.processor
         torch.cuda.empty_cache()
+
+    def get_memory_footprint(self) -> int:
+        return self.model.get_memory_footprint()
