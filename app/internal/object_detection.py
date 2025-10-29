@@ -22,7 +22,7 @@ class GDinoDetector:
             self.model_id,
             cache_dir=config.hf_home,
             quantization_config=q_config,
-        ).to(self.device)
+        )
         self.model.eval()
 
         self._queue = queue.Queue()
