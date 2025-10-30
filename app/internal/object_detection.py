@@ -5,7 +5,6 @@ import threading
 import torch
 from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
 from transformers.image_utils import load_image
-from transformers import BitsAndBytesConfig
 
 from ..configs import config
 from ..models.object_detection import DetectorInput, DetectionResult, DetectorOutput
@@ -17,11 +16,9 @@ class GDinoDetector:
         self.model_id = config.gdino_model_id
         self.device = config.device
         self.processor = AutoProcessor.from_pretrained(self.model_id, cache_dir=config.hf_home)
-        q_config = BitsAndBytesConfig(load_in_8bit=True)
         self.model = AutoModelForZeroShotObjectDetection.from_pretrained(
             self.model_id,
-            cache_dir=config.hf_home,
-            quantization_config=q_config,
+            cache_dir=config.hf_home
         ).to(self.device)
         self.model.eval()
 
@@ -92,6 +89,3 @@ class GDinoDetector:
         self._worker_thread.join()
         del self.model, self.processor
         torch.cuda.empty_cache()
-
-    def get_memory_footprint(self) -> int:
-        return self.model.get_memory_footprint()

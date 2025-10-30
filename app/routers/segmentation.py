@@ -176,6 +176,5 @@ def health_check():
     return {
         "status": "healthy" if segmenter else "not initialized",
         "device": segmenter.device if segmenter else None,
-        "model": segmenter.model_id if segmenter else None,
-        "memory_footprint": segmenter.get_memory_footprint() if segmenter else None,
+        "model": segmenter.model_id if segmenter else None
     }
